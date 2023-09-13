@@ -9,7 +9,7 @@ state("Wargame-G4WLive", "1.03")
 {
     float FPos    : 0x17A1F60, 0x4CC, 0x8F0, 0x1F0, 0x60, 0xC8, 0x10, 0x128;
     float Pos     : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;
-	float RAAM    : 0x179F10C;
+    float RAAM    : 0x179F10C;
     byte  Po      : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;
     byte  COG     : 0x17A1F60, 0x4C0, 0x18, 0x8, 0x68, 0x14, 0x2A4;
     byte  lvl     : 0x179ED48, 0x4, 0x4, 0x28, 0x3C, 0x1C, 0x2BC;
@@ -91,13 +91,13 @@ startup
 	settings.Add("All COG Tags", false, "All COG Tags");
 
     // Tool Tips
-	settings.SetToolTip("Start", "Are You Playing Solo Or Coop");
+    settings.SetToolTip("Start", "Are You Playing Solo Or Coop");
     settings.SetToolTip("Immediately", "Check If You Are Running Singleplayer Category");
     settings.SetToolTip("After Restarting CheckPoint", "Check If You Are Running Multiplayer Category");
     settings.SetToolTip("All COG Tags", "Check If You Want To Run All Cog Tags Category");
 
     // vars
-	vars.completedSplits = new List<string>();
+    vars.completedSplits = new List<string>();
 
 }
 
@@ -114,13 +114,13 @@ update
 start
 {
 	if(settings ["Immediately"]){
-		if(old.Load == 0 && current.Load == 1 && current.Pos != current.FPos){
+        if(old.Load == 0 && current.Load == 1 && current.Pos != current.FPos){
             return true;
         }
 	}
 	
 	if(settings ["After Restarting CheckPoint"]){
-	    if(current.lvl == 0 && current.Pos > 0 && old.Pos < 0 || current.lvl == 8 && current.Pos > 1000 && old.Pos < 1000 || current.lvl == 16 && current.Pos > 0 && old.Pos < 0 && old.Load == 0 || current.lvl == 22 && current.Pos > 20000 && old.Pos < 20000 && old.Pos > 0 || current.lvl == 28 && current.Po == 12 && old.Po == 130){
+        if(current.lvl == 0 && current.Pos > 0 && old.Pos < 0 || current.lvl == 8 && current.Pos > 1000 && old.Pos < 1000 || current.lvl == 16 && current.Pos > 0 && old.Pos < 0 && old.Load == 0 || current.lvl == 22 && current.Pos > 20000 && old.Pos < 20000 && old.Pos > 0 || current.lvl == 28 && current.Po == 12 && old.Po == 130){
             return true;
         }
 	}
@@ -141,7 +141,7 @@ split
 	if(settings ["ACT 1"] || settings ["ACT 2"] || settings ["ACT 3"] || settings ["ACT 4"] || settings ["ACT 5"]){
 		vars.hashString = current.lvl.ToString();
 
-    if(current.lvl > old.lvl){
+        if(current.lvl > old.lvl){
 			if (settings[vars.hashString] && !vars.completedSplits.Contains(vars.hashString))
 			{
 				vars.completedSplits.Add(vars.hashString);
