@@ -120,7 +120,7 @@ start
 	}
 	
 	if(settings ["After Restarting CheckPoint"]){
-        if(current.lvl == 0 && current.Pos > 0 && old.Pos < 0 || current.lvl == 8 && current.Pos > 1000 && old.Pos < 1000 || current.lvl == 16 && current.Pos > 0 && old.Pos < 0 && old.Load == 0 || current.lvl == 22 && current.Pos > 20000 && old.Pos < 20000 && old.Pos > 0 || current.lvl == 28 && current.Po == 12 && old.Po == 130){
+        if(current.lvl == 0 && current.Pos > 0 && old.Pos < 0 || current.lvl == 8 && current.Pos > 1000 && old.Pos < 1000 && old.Pos > 100 || current.lvl == 16 && current.Pos > 0 && old.Pos < 0 && old.Load == 0 || current.lvl == 22 && current.Pos > 20000 && old.Pos < 20000 && old.Pos > 0 || current.lvl == 28 && current.Po == 12 && old.Po == 130){
             return true;
         }
 	}
