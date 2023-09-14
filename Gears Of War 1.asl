@@ -106,7 +106,6 @@ update
     if (timer.CurrentPhase == TimerPhase.NotRunning)
     {
 		vars.completedSplits.Clear();
-		vars.totalGameTime = 0;
     }
 	
 }
