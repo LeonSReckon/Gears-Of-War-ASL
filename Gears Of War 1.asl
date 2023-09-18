@@ -1,4 +1,4 @@
-// Gears Of War AutoSplitter/Load-Remover Version 3.0.0 09/14/2023
+// Gears Of War AutoSplitter/Load-Remover Version 4.0.0 09/14/2023
 // Supports LRT/RTA
 // Supports All Difficulties
 // Supports SinglePlayer && MultiPlayer!
@@ -7,13 +7,15 @@
 
 state("Wargame-G4WLive", "1.03")
 {
-    float FPos    : 0x17A1F60, 0x4CC, 0x8F0, 0x1F0, 0x60, 0xC8, 0x10, 0x128;
-    float Pos     : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;
-    float RAAM    : 0x179F10C;
-    byte  Po      : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;
-    byte  COG     : 0x17A1F60, 0x4C0, 0x18, 0x8, 0x68, 0x14, 0x2A4;
-    byte  lvl     : 0x179ED48, 0x4, 0x4, 0x28, 0x3C, 0x1C, 0x2BC;
-    byte  Load    : 0x114C420, 0xFFC;
+    float FPos    : 0x17A1F60, 0x4CC, 0x8F0, 0x1F0, 0x60, 0xC8, 0x10, 0x128;  // Changes when Player moves but doesn't display number till you pause the game
+    float Pos     : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;             // Changes when Player moves
+    float HP      : 0x17E52DC, 0x14, 0xE0, 0x60, 0x48, 0x10, 0x4C, 0x2A0;     // Player 1 HP
+	float RAAM    : 0x179F10C;                                                // In the final level it's 0.5 and turns 0 when you kill RAAM
+    byte  Obj     : 0x17A1F84, 0x0, 0x28, 0x48, 0x18, 0x4C, 0x60, 0x520;      // Changes when you finish Objectives, but 70% unreliable
+    byte  Gun     : 0x17A1F84, 0x0, 0x28, 0x48, 0x18, 0x28, 0x90, 0x4C;       // Changes when you change the gun
+    byte  COG     : 0x17A1F60, 0x4C0, 0x18, 0x8, 0x68, 0x14, 0x2A4;           // Number of COG tags collected
+    byte  lvl     : 0x179ED48, 0x4, 0x4, 0x28, 0x3C, 0x1C, 0x2BC;             // Number of the level that's being played
+    byte  Load    : 0x114C420, 0xFFC;                                         // 0 on Loads, 1 everywhere else
 }
 
 startup
@@ -26,128 +28,102 @@ startup
 	settings.Add("After Restarting CheckPoint", false, "After Restarting CheckPoint");
 	settings.CurrentDefaultParent = null;
 
-    // ACTs Splits
-	settings.Add("ACTS", true, "ACTS");
-	settings.CurrentDefaultParent = "ACTS";
-	settings.Add("ACT 1", true, "ACT 1: Ashes");
-	settings.Add("ACT 2", true, "ACT 2: NightFall");
-	settings.Add("ACT 3", true, "ACT 3: Belly Of The Beast");
-	settings.Add("ACT 4", true, "ACT 4: The Long Road Home");
-	settings.Add("ACT 5", true, "ACT 5: Desperation");
-	settings.CurrentDefaultParent = null;
-
-	settings.CurrentDefaultParent = "ACT 1";
-	settings.Add("0", false, "14 Years After E-Day");
-	settings.Add("1", false, "Trial By Fire");
-	settings.Add("2", false, "Fish In A Barrel");
-	settings.Add("3", false, "Fork In The Road");
-	settings.Add("4", false, "Knock Knock");
-	settings.Add("5", false, "Hammer");
-	settings.Add("6", false, "Wrath");
-	settings.Add("7", false, "China Chop");
-	settings.CurrentDefaultParent = null;
-
-	settings.CurrentDefaultParent = "ACT 2";
-	settings.Add("8", false, "Tick Tick Boom");
-	settings.Add("9", false, "Grist");
-	settings.Add("10", false, "Outpost");
-	settings.Add("11", false, "Lethal Dusk");
-	settings.Add("12", false, "Dark Labyrinth");
-	settings.Add("13", false, "Powder Keg");
-	settings.Add("14", false, "Burnt Rubber");
-	settings.Add("15", false, "Last Stand");
-	settings.CurrentDefaultParent = null;
-
-	settings.CurrentDefaultParent = "ACT 3";
-	settings.Add("16", false, "DownPour");
-	settings.Add("17", false, "Evolution");
-	settings.Add("18", false, "Coalition Cargo");
-	settings.Add("19", false, "Darkest Before Dawn");
-	settings.Add("20", false, "Angry Titan");
-	settings.Add("21", false, "Tip Of The Iceberg");
-	settings.CurrentDefaultParent = null;
-
-	settings.CurrentDefaultParent = "ACT 4";
-	settings.Add("22", false, "Campus Grinder");
-	settings.Add("23", false, "Bad To Worse");
-	settings.Add("24", false, "Hazing");
-	settings.Add("25", false, "Close To Home");
-	settings.Add("26", false, "Imaginary Place");
-	settings.Add("27", false, "Ethrenched");
-	settings.CurrentDefaultParent = null;
-
-	settings.CurrentDefaultParent = "ACT 5";
-	settings.Add("28", false, "Impasse");
-	settings.Add("29", false, "Comedy Of Errors");
-	settings.Add("30", false, "Window Shopping");
-	settings.Add("31", false, "Powers That Be");
-	settings.Add("32", false, "Jurassic Proportions");
-	settings.Add("33", false, "Special Delivery");
-	settings.Add("34", false, "Train Wreck");
-	settings.Add("35", false, "Pale Horse");
-	settings.CurrentDefaultParent = null;
-
-    // Collectibles Splits
+    // Splits
+	settings.Add("Split Type", true, "Split Type");
+	settings.CurrentDefaultParent = "Split Type";
+	settings.Add("ACTS Split", true, "ACTS Split");
+	settings.Add("Sub-ACTS Split", true, "Sub-ACTS Split");
 	settings.Add("All COG Tags", false, "All COG Tags");
+	settings.CurrentDefaultParent = null;
 
     // Tool Tips
-    settings.SetToolTip("Start", "Are You Playing Solo Or Coop");
+	settings.SetToolTip("Start", "Are You Playing Solo Or Coop");
     settings.SetToolTip("Immediately", "Check If You Are Running Singleplayer Category");
     settings.SetToolTip("After Restarting CheckPoint", "Check If You Are Running Multiplayer Category");
-    settings.SetToolTip("All COG Tags", "Check If You Want To Run All Cog Tags Category");
+    settings.SetToolTip("Split Type", "Where do you want to split");
+	settings.SetToolTip("ACTS Split", "Requires 4 Splits for each ACT");
+	settings.SetToolTip("Sub-ACTS Split", "Requires 31 Splits for each level in each ACT but doesn't split on ACTS");
+	settings.SetToolTip("All COG Tags", "Requires 33 Splits for each Cog Tag Collected");
 
     // vars
-    vars.completedSplits = new List<string>();
+	vars.cutscenes_count  = 0;
+	vars.act              = new List<byte>()
+	{0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,17,18,19,20,21,23,24,25,26,27,29,30,31,32,33,34,35};
+	vars.sact             = new List<byte>()
+	{8,16,22,28};
 
+    // actions
+    Action reset_vars = () => {
+    vars.cutscenes_count = 0;
+    };
+	
+	vars.reset_vars = reset_vars;
+	
 }
 
 update
 {
     if (timer.CurrentPhase == TimerPhase.NotRunning)
     {
-		vars.completedSplits.Clear();
+	vars.act     = new List<byte>()
+	{0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,17,18,19,20,21,23,24,25,26,27,29,30,31,32,33,34,35};
+	vars.sact    = new List<byte>()
+	{8,16,22,28};
     }
-	
 }
 
 start
 {
 	if(settings ["Immediately"]){
-        if(old.Load == 0 && current.Load == 1 && current.Pos != current.FPos){
+		if(old.Load == 0 && current.Load == 1 && current.Pos != current.FPos){
             return true;
         }
 	}
 	
 	if(settings ["After Restarting CheckPoint"]){
-        if(current.lvl == 0 && current.Pos > 0 && old.Pos < 0 || current.lvl == 8 && current.Pos > 1000 && old.Pos < 1000 && old.Pos > 100 || current.lvl == 16 && current.Pos > 0 && old.Pos < 0 && old.Load == 0 || current.lvl == 22 && current.Pos > 20000 && old.Pos < 20000 && old.Pos > 0 || current.lvl == 28 && current.Po == 12 && old.Po == 130){
-            return true;
-        }
-	}
+        if(current.lvl == 0 || current.lvl == 8 || current.lvl == 16 || current.lvl == 22 || current.lvl == 28)
+        {
+        // update cutscenes_count
+        if(current.Load == 1 && old.Load == 0) vars.cutscenes_count++;
+
+        // final split
+        if(vars.cutscenes_count >= 1 && current.Load == 1) { vars.reset_vars(); return true; }
+	    }
+    }
 }
 
 split
 {
+	//Final Split in the game always active
 	if(current.lvl == 35 && current.RAAM == 0 && old.RAAM > 0 && current.Load == 1){
 		return true;
-		}
+	}
+
+	//ACT 1 Final Split For IL, still in development
+	//if(current.lvl == 7 && current.Obj == 0 && old.Obj > 0 && current.Load == 1){
+		//return true;
+	//}
 
 	if(settings ["All COG TAGS"]){
-	if(current.COG > old.COG && current.COG > 0){
+		if(current.COG > old.COG && current.COG > 0){
 		return true;
 		}
 	}
-	
-	if(settings ["ACT 1"] || settings ["ACT 2"] || settings ["ACT 3"] || settings ["ACT 4"] || settings ["ACT 5"]){
-		vars.hashString = current.lvl.ToString();
 
-        if(current.lvl > old.lvl){
-			if (settings[vars.hashString] && !vars.completedSplits.Contains(vars.hashString))
+	if(settings ["ACTS Split"]){
+		if(current.lvl > old.lvl && !vars.act.Contains(current.lvl)){
+		return true;
+		}
+	}
+
+	if(settings ["Sub-ACTS Split"]){
+    	if(current.lvl > old.lvl && !vars.sact.Contains(current.lvl)){
 			{
-				vars.completedSplits.Add(vars.hashString);
+				vars.sact.Add(current.lvl); 
 				return true;
 			}
 		}
-    }
+	}
 }
 
 isLoading 
@@ -155,7 +131,12 @@ isLoading
     return current.Pos == current.FPos && current.lvl != 14 || current.Load == 0 || old.Pos == current.FPos && current.lvl != 14 || current.lvl == 14 && current.Pos == current.FPos && current.Pos > 0;
 }
 
-//reset
-//{
-//    return current.Load == 0 && current.lvl == 0 && current.FPos == current.Pos && current.Pos == 0;
-//}
+onReset
+{
+    vars.reset_vars();
+}
+
+reset
+{
+    return current.FPos == 0 && current.Pos == 0 && current.COG == 0 && current.lvl == 0 && current.Load == 1 && current.RAAM == 0 && current.Obj == 0 && current.HP == 0 && current.Gun == 0;
+}
