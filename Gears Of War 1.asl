@@ -1,21 +1,23 @@
-// Gears Of War AutoSplitter/Load-Remover Version 4.2.0 09/14/2023
+// Gears Of War AutoSplitter/Load-Remover Version 5.0.0 09/14/2023
 // Supports LRT/RTA
 // Supports All Difficulties
 // Supports SinglePlayer && MultiPlayer!
-// Main Script & Pointers <by> ||LeonSReckon||
+// Main Script, Pointers, Updates, Remodification <by> ||LeonSReckon||
 // Huge Thanks to "TheDementedSalad" && "Gabriel_Dornelles/House_of_Evil" for Help Whenever I had a Question or a Problem
 
 state("Wargame-G4WLive", "1.03")
 {
-    float FPos    : 0x17A1F60, 0x4CC, 0x8F0, 0x1F0, 0x60, 0xC8, 0x10, 0x128;               // Changes when Player moves but doesn't display Value till you pause the game
-    float Pos     : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;                          // Changes when Player moves
-    float RAAM    : 0x179F10C;                                                             // In the final level it's 0.5 before killing RAAM and turns 0 when you kill RAAM
-    byte  Obj     : 0x17A1F84, 0x0, 0x28, 0x48, 0x18, 0x4C, 0x60, 0x520;                   // Changes when you finish Objectives, but 70% unreliable
-    byte  Gun     : 0x17A1F84, 0x0, 0x28, 0x48, 0x18, 0x28, 0x90, 0x4C;                    // Changes when you change guns
-    byte  COG     : 0x17A1F60, 0x4C0, 0x18, 0x8, 0x68, 0x14, 0x2A4;                        // Number of COG tags collected
-    byte  lvl     : 0x179ED48, 0x4, 0x4, 0x28, 0x3C, 0x1C, 0x2BC;                          // Number of the level that's being played
-    byte  Load    : 0x114C420, 0xFFC;                                                      // 0 on Loads, 1 everywhere else
-    int   PHP     : 0x17A1F60, 0x1F4, 0x28, 0x48, 0x3C, 0x5D8, 0x1B0, 0x2A0;               // Player 1 HP
+    float FPos  : 0x17A1F60, 0x4CC, 0x8F0, 0x1F0, 0x60, 0xC8, 0x10, 0x128; // Changes when Player moves but doesn't display Value till you pause the game
+    float Pos   : 0x17A1F84, 0x0, 0x28, 0x48, 0x0, 0x4C, 0x128;            // Changes when Player moves
+    float END   : 0x179F10C;                                               // In the final level it's 0.5 before killing END and turns 0 when you kill END
+    byte  Obj   : 0x17A1F84, 0x0, 0x28, 0x48, 0x18, 0x4C, 0x60, 0x520;     // Changes when you finish Objectives, but 70% unreliable
+    byte  Gun   : 0x17A1F84, 0x0, 0x28, 0x48, 0x18, 0x28, 0x90, 0x4C;      // Changes when you change guns
+    byte  lvl   : 0x179ED48, 0x4, 0x4, 0x28, 0x3C, 0x1C, 0x2BC;            // Number of the level that's being played
+    byte  Load  : 0x114C420, 0xFFC;                                        // 0 on Loads, 1 everywhere else
+	byte  Pause : 0x177BC18, 0x10, 0xE8, 0x28, 0xA8, 0x44, 0xB8, 0xE98;    // 1 on Pauses, 0 everywhere else
+    byte  COG   : 0x17A1F60, 0x4C0, 0x18, 0x8, 0x68, 0x14, 0x2A4;          // Number of COG tags collected
+    int   PHP   : 0x17A1F60, 0x1F4, 0x28, 0x48, 0x3C, 0x5D8, 0x1B0, 0x2A0; // Player 1 HP
+	int   RAAM  : 0x17EB264, 0x3C, 0xC, 0x1E4, 0x50, 0x1C, 0x3C, 0x2A0;    // RAAM HP
 }
 
 startup
@@ -65,9 +67,9 @@ update
 {
     if (timer.CurrentPhase == TimerPhase.NotRunning)
     {
-	vars.act    = new List<byte>()
-	{8,16,22,28};
 	vars.acts   = new List<byte>()
+	{8,16,22,28};
+	vars.act    = new List<byte>()
 	{8,16,22,28};
     }
 }
@@ -95,7 +97,7 @@ start
 split
 {
 	//Final Split in the game always active
-	if(current.lvl == 35 && current.RAAM == 0 && old.RAAM > 0 && current.Load == 1){
+	if(current.lvl == 35 && current.END == 0 && old.END > 0 && current.Load == 1){
 		return true;
 	}
 
@@ -128,10 +130,10 @@ split
 
 isLoading 
 {
-    return current.Pos == current.FPos && current.lvl != 14 || current.Load == 0 || old.Pos == current.FPos && current.lvl != 14;
+    return current.Pause == 1 || old.Pause != current.Pause || current.Load == 0;
 }
 
 reset
 {
-    return current.FPos == 0 && current.Pos == 0 && current.COG == 0 && current.lvl == 0 && current.Load == 1 && current.RAAM == 0 && current.Obj == 0 && current.HP == 0 && current.Gun == 0;
+    return current.FPos == 0 && current.Pos == 0 && current.COG == 0 && current.lvl == 0 && current.Load == 1 && current.END == 0 && current.Obj == 0 && current.Gun == 0;
 }
